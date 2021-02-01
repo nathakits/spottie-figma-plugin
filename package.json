@@ -1,0 +1,20 @@
+{
+  "name": "figma-plugin-vue",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Figma Plugin using Vue - everything you need to get started developing figma plugin using Vue SPA",
+  "main": "code.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "author": "Manthankumar Satani",
+  "license": "MIT",
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "dependencies": {
+    "@figma/plugin-typings": "^1.15.0"
+  }
+}
