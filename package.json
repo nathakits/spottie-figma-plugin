@@ -15,6 +15,6 @@
     "not dead"
   ],
   "dependencies": {
-    "@figma/plugin-typings": "^1.15.0"
+    "@figma/plugin-typings": "^1.19.0"
   }
 }
