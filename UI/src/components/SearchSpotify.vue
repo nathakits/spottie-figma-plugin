@@ -3,11 +3,11 @@
     <div class="flex items-center space-x-2 px-4">
       <div class="flex-1">
         <div class="relative focus-within:text-gray-600 text-gray-400">
-          <input type="text" class="text-sm px-4 py-1 border focus:ring-gray-500 focus:border-gray-900 w-full border-gray-300 rounded focus:outline-none text-gray-600" placeholder="Search">
+          <input type="text" class="text-sm px-4 py-1 border focus:ring-gray-500 focus:border-gray-900 hover:border-gray-900 w-full border-gray-300 rounded focus:outline-none text-gray-600" placeholder="Search">
         </div>
       </div>
       <div>
-        <button class="text-sm bg-blue-700 text-white border border-blue-700 py-1 px-4 rounded">
+        <button class="text-sm bg-blue-600 hover:bg-blue-700 text-white border border-blue-600 py-1 px-4 rounded">
           Search
         </button>
       </div>
@@ -23,7 +23,7 @@
     <div class="absolute bottom-0 left-0 right-0 bg-white">
       <hr class="divide-solid my-2">
       <div class="h-full w-full px-4 pb-2">
-        <button class="text-sm bg-blue-700 text-white border border-blue-700 py-1 px-4 rounded w-full h-full">Insert Random</button>
+        <button class="text-sm bg-blue-600 hover:bg-blue-700 text-white border border-blue-600 py-1 px-4 rounded w-full h-full">Insert Random</button>
       </div>
     </div>
   </div>
