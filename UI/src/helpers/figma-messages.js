@@ -8,4 +8,8 @@ const closePlugin = () => {
   parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
 }
 
-export { createRectangles, closePlugin }
+const notify = (message) => {
+  parent.postMessage({ pluginMessage: { type: 'msg', message } }, '*')
+}
+
+export { createRectangles, closePlugin, notify }
