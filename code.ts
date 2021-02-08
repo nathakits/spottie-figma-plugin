@@ -25,6 +25,10 @@ figma.ui.onmessage = msg => {
     }
     figma.currentPage.selection = nodes;
     figma.viewport.scrollAndZoomIntoView(nodes);
+
+    if (msg.type === 'notify') {
+      figma.notify(msg.message)
+    }
   }
 
   // Make sure to close the plugin when you're done. Otherwise the plugin will
