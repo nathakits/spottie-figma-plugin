@@ -1,22 +1,21 @@
 <template>
   <div id="app" class="h-full py-2">
-    <CreateRectangles />
+    <SearchSpotify />
   </div>
 </template>
 
 <script>
-import CreateRectangles from "./components/CreateRectangles.vue";
+import SearchSpotify from "./components/SearchSpotify.vue";
 
 export default {
   name: "App",
   components: {
-    CreateRectangles
+    SearchSpotify
   }
 };
 </script>
 
 <style>
-@import "./assets/css/index.css";
 
 body {
   overflow:hidden;
