@@ -6,7 +6,7 @@ const watch = process.argv.includes("--watch-inline") ? process.argv.includes("-
 
 module.exports = {
     css: {
-        extract: false, // don't extract the internal css chunks to external file
+        extract: true, // don't extract the internal css chunks to external file
     },
     configureWebpack: {
         watch, // watch the file changes and build the final UI that can used by Figma plugin directly
