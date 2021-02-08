@@ -5,7 +5,8 @@
   "description": "Figma Plugin using Vue - everything you need to get started developing figma plugin using Vue SPA",
   "main": "code.js",
   "scripts": {
-    "build": "tsc -p tsconfig.json"
+    "build": "tsc -p tsconfig.json",
+    "watch": "tsc -p tsconfig.json -w"
   },
   "author": "Manthankumar Satani",
   "license": "MIT",
