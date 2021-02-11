@@ -7,7 +7,11 @@
         </div>
       </div>
       <div>
-        <button class="text-sm bg-blue-600 hover:bg-blue-700 text-white border border-blue-600 py-1 px-4 rounded" @click="querySpotify()">
+        <button
+          class="text-sm bg-blue-600 hover:bg-blue-700 text-white border border-blue-600 py-1 px-4 rounded disabled:opacity-50"
+          @click="querySpotify()"
+          :disabled="searchQuery.length === 0"
+        >
           Search
         </button>
       </div>
@@ -16,16 +20,27 @@
     <div class="overflow-y-auto overflow-x-hidden" style="height: calc(100vh - 110px);">
       <div v-if="artists.length !== 0" class="grid grid-cols-3 gap-4 px-4">
         <div v-for="(item ,i) in artists" :key="i">
-          <div class="bg-gray-400 rounded h-32">
+          <div class="box bg-gray-400 rounded h-32 hover:opacity-50 cursor-pointer">
             <template v-if="item.images.length > 1">
-              <img class="object-cover w-full h-full rounded h-32" :src="item.images[2].url" :alt="item.name">
+              <img
+              :ref="`${item.name}-${i}`"
+              class="object-cover w-full h-full rounded h-32"
+              :src="item.images[0].url"
+              :alt="item.name"
+              @click="addToCanvas(item.images[0].url)"
+              >
             </template>
           </div>
           <div class="text-xs">{{ item.name }}</div>
         </div>
       </div>
-      <div class="px-4 mt-4">
-        <button v-if="artists.length !== total" class="text-sm bg-blue-600 hover:bg-blue-700 text-white border border-blue-600 py-1 px-4 rounded w-full" @click="paginateSpotify()">See More</button>
+      <div v-if="artists.length !== total" class="px-4 mt-4">
+        <button
+          class="text-sm bg-blue-600 hover:bg-blue-700 text-white border border-blue-600 py-1 px-4 rounded w-full"
+          @click="paginateSpotify()"
+        >
+          See More
+        </button>
       </div>
       <div v-if="artists.length === 0" class="flex items-center justify-center h-full w-full">
         <div class="text-center">
@@ -37,7 +52,13 @@
     <div class="absolute bottom-0 left-0 right-0 bg-white">
       <hr class="divide-solid my-2">
       <div class="h-full w-full px-4 pb-2">
-        <button class="text-sm bg-blue-600 hover:bg-blue-700 text-white border border-blue-600 py-1 px-4 rounded w-full h-full" @click="clearSearch()">Clear Search {{ total ? `(${total})` : '' }}</button>
+        <button
+          class="text-sm bg-blue-600 hover:bg-blue-700 text-white border border-blue-600 py-1 px-4 rounded w-full h-full disabled:opacity-50"
+          @click="clearSearch()"
+          :disabled="artists.length === 0"
+        >
+            Clear Search {{ total ? `(${total})` : '' }}
+        </button>
       </div>
     </div>
   </div>
@@ -45,7 +66,7 @@
 
 <script>
 import axios from 'axios';
-import { notify  } from "../helpers/figma-messages";
+import { notify, createImage } from "../helpers/figma-messages";
 
 var qs = require('qs');
 var data = qs.stringify({
@@ -65,6 +86,10 @@ export default {
       total: 0,
       next: null,
       previous: null,
+      size: {
+        width: 0,
+        height: 0
+      },
     };
   },
   methods: {
@@ -136,6 +161,19 @@ export default {
       this.artists = []
       this.total = 0
       this.offset = 0
+    },
+    addToCanvas(imageURL) {
+      console.log(imageURL)
+      axios({
+        method: 'get',
+        url: imageURL,
+        responseType: 'arraybuffer'
+      })
+      .then( response => {
+        var arrayBufferView = new Uint8Array( response.data );
+        // send data to figma
+        createImage(arrayBufferView, this.size)
+      })
     }
   }
 };
