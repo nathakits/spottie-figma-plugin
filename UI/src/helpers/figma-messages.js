@@ -12,4 +12,8 @@ const notify = (message) => {
   parent.postMessage({ pluginMessage: { type: 'msg', message } }, '*')
 }
 
-export { createRectangles, closePlugin, notify }
+const createImage = (buffer, size) => {
+  parent.postMessage({ pluginMessage: { type: 'create-image', buffer, size } }, '*')
+}
+
+export { createRectangles, closePlugin, notify, createImage }
