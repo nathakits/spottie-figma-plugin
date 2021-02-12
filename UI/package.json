@@ -15,6 +15,7 @@
     "core-js": "^3.6.5",
     "qs": "^6.9.6",
     "vue": "^2.6.11",
+    "vue-long-click": "^0.0.4",
     "vuex": "^3.5.1"
   },
   "eslintConfig": {
