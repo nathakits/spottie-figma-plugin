@@ -11,27 +11,11 @@ figma.showUI(__html__, { width: 450, height: 600 });
 figma.ui.onmessage = msg => {
     // One way of distinguishing between different types of messages sent from
     // your HTML page is to use an object with a "type" property like this.
-    if (msg.type === 'create-rectangles') {
-        const nodes = [];
-        for (let i = 0; i < msg.count; i++) {
-            const rect = figma.createRectangle();
-            rect.x = i * 150;
-            rect.fills = [{ type: 'SOLID', color: { r: 1, g: 0.5, b: 0 } }];
-            figma.currentPage.appendChild(rect);
-            nodes.push(rect);
-        }
-        figma.currentPage.selection = nodes;
-        figma.viewport.scrollAndZoomIntoView(nodes);
-    }
-    if (msg.type === 'notify') {
-        figma.notify(msg.message);
-    }
     if (msg.type === 'create-image') {
-        const nodes = [];
         // get current selection
         var currentSel = figma.currentPage.selection;
         // if selection has an object
-        if (currentSel.length === 1) {
+        if (currentSel.length > 0) {
             // loop nodes to check type
             currentSel.forEach(node => {
                 if (node.type === 'FRAME' ||
@@ -61,22 +45,63 @@ figma.ui.onmessage = msg => {
             var viewport = figma.viewport.center;
             // create rectangle and set image fill
             const rect = figma.createRectangle();
+            // set x and y coordinates with viewport values
             rect.x = viewport.x;
             rect.y = viewport.y;
-            rect.resize(800, 800);
+            // hard code rect size
+            rect.resize(msg.size.width, msg.size.height);
+            // set type to IMAGE and set fill with image hash data
             rect.fills = [
                 { type: 'IMAGE', scaleMode: 'FILL', imageHash: hash }
             ];
             // add image to Figma
             figma.currentPage.appendChild(rect);
-            nodes.push(rect);
-        }
-        // notify user
-        else {
-            figma.notify(`Please select one object`);
         }
     }
-    // Make sure to close the plugin when you're done. Otherwise the plugin will
-    // keep running, which shows the cancel button at the bottom of the screen.
-    // figma.closePlugin();
+    if (msg.type === 'create-image-array') {
+        // const nodes: SceneNode[] = [];
+        // get current selection
+        var currentSel = figma.currentPage.selection;
+        // if selection has an object
+        if (currentSel.length > 0) {
+            // loop nodes to check type
+            currentSel.forEach((node, i) => {
+                if (node.type === 'FRAME' ||
+                    node.type === 'ELLIPSE' ||
+                    node.type === 'POLYGON' ||
+                    node.type === 'RECTANGLE' ||
+                    node.type === 'STAR' ||
+                    node.type === 'VECTOR') {
+                    // inset fill to node
+                    var buffer = msg.array[i];
+                    var hash = figma.createImage(buffer).hash;
+                    node.fills = [
+                        { type: 'IMAGE', scaleMode: 'FILL', imageHash: hash }
+                    ];
+                }
+                else {
+                    figma.notify(`Please select a fillable object`);
+                }
+            });
+        }
+        else if (currentSel.length === 0) {
+            var nodes = [];
+            // viewport
+            var viewport = figma.viewport.center;
+            // create rectangle and set image fill
+            msg.array.forEach((buffer, i) => {
+                var hash = figma.createImage(buffer).hash;
+                var rect = figma.createRectangle();
+                rect.x = viewport.x + (i * msg.size.width);
+                rect.y = viewport.y;
+                // hard code rect size
+                rect.resize(msg.size.width, msg.size.height);
+                rect.fills = [
+                    { type: 'IMAGE', scaleMode: 'FILL', imageHash: hash }
+                ];
+                figma.currentPage.appendChild(rect);
+                nodes.push(rect);
+            });
+        }
+    }
 };
