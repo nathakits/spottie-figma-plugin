@@ -45,7 +45,7 @@
         <hr v-if="activeSearchView === 'tracks'" class="divide-solid" style="border-top-width:2px">
       </div>
     </div>
-    <div v-if="activeSearchView === 'artists'" class="overflow-y-auto overflow-x-hidden" style="height: calc(100vh - 110px);">
+    <div v-if="activeSearchView === 'artists'" class="overflow-y-auto overflow-x-hidden" style="height: calc(100vh - 152px);">
       <div v-if="activeSearchArr.length !== 0" class="grid grid-cols-3 gap-4 px-4">
         <div v-for="(item ,i) in activeSearchArr" :key="i" :id="item.name">
           <div
@@ -67,7 +67,7 @@
         </div>
       </div>
     </div>
-    <div v-if="activeSearchView === 'tracks'" class="overflow-y-auto overflow-x-hidden" style="height: calc(100vh - 110px);">
+    <div v-if="activeSearchView === 'tracks'" class="overflow-y-auto overflow-x-hidden" style="height: calc(100vh - 152px);">
       <div v-if="activeSearchArr.length !== 0" class="grid grid-cols-3 gap-4 px-4">
         <div v-for="(item ,i) in activeSearchArr" :key="i" :id="item.name">
           <div
@@ -94,17 +94,17 @@
       <div class="flex space-x-2 h-full px-4 pb-2 justify-end	">
         <template v-if="longpress === false">
           <button
-            v-if="artists.length !== total"
+            v-if="activeSearchArr.length !== total"
             class="text-sm bg-blue-200 hover:bg-blue-300 text-blue-600 border border-blue-600 py-1 px-4 rounded h-full disabled:opacity-50 flex-initial"
             @click="paginateSpotify()"
-            :disabled="artists.length === 0"
+            :disabled="activeSearchArr.length === 0"
           >
             Load More
           </button>
           <button
             class="text-sm bg-red-200 hover:bg-red-300 text-red-600 border border-red-600 py-1 px-4 rounded h-full disabled:opacity-50 flex-initial"
             @click="clearSearch()"
-            :disabled="artists.length === 0"
+            :disabled="activeSearchArr.length === 0"
           >
             Clear Search
           </button>
@@ -113,7 +113,7 @@
           <button
             class="text-sm bg-blue-200 hover:bg-blue-300 text-blue-600 border border-blue-600 py-1 px-4 rounded h-full disabled:opacity-50 flex-initial"
             @click="resetLongpress()"
-            :disabled="artists.length === 0"
+            :disabled="activeSearchArr.length === 0"
           >
             Clear Selection ({{ arraySel.length }})
           </button>
@@ -154,8 +154,7 @@ export default {
       activeSearchArr: [],
       searchType: 'artist,track',
       searchQuery: '',
-      queryLimit: 18,
-      limit: 18,
+      limit: 30,
       offset: 0,
       total: 0,
       next: null,
@@ -251,8 +250,12 @@ export default {
     clearSearch() {
       this.artists = []
       this.tracks = []
+      this.activeSearchArr = []
       this.total = 0
       this.offset = 0
+      this.searchQuery = ''
+      var input = document.querySelector('input')
+      input.focus()
     },
     addToCanvas(imageURL) {
       if (this.longpress === false) {
