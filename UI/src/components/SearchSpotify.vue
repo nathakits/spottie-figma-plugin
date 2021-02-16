@@ -251,11 +251,9 @@ export default {
     };
   },
   mounted(){
-    // var y = document.getElementById('menuList');
     document.addEventListener('mouseup', this.closeMenu)
   },
   beforeDestroy() {
-    // var y = document.getElementById('menuList');
     document.removeEventListener('mouseup', this.closeMenu)
   },
   methods: {
@@ -430,7 +428,6 @@ export default {
       var isClickInside = menu.contains(e.target);
       var isMenuBtn = menubtn.contains(e.target)
       if (!isClickInside && !isMenuBtn) {
-        console.log(`close menu`);
         this.menu = false
       } else {
         if (e.target.href) {
@@ -452,7 +449,6 @@ export default {
         }
         audio.onended = () => {
           this.playing = false
-          console.log(`ended`)
         }
       }
     },
