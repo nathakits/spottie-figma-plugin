@@ -6,7 +6,7 @@
   "author": "Manthankumar Satani",
   "license": "MIT",
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "NODE_ENV=development vue-cli-service serve",
     "build": "vue-cli-service build",
     "build-watch": "vue-cli-service build --watch-inline"
   },
