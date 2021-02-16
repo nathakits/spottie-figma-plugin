@@ -1,20 +1,54 @@
 <template>
   <div class="h-full">
+    <!-- header -->
     <div class="flex items-center space-x-2 px-4">
+      <div class="relative">
+        <button
+          id="menuBtn"
+          class="text-xs text-gray-900 hover:bg-gray-200 py-1 px-4 rounded disabled:opacity-50 h-8 focus:outline-none cursor-default"
+          @click="menu = !menu"
+        >
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 12H18V10H0V12ZM0 7H18V5H0V7ZM0 0V2H18V0H0Z" fill="black"/>
+          </svg>
+        </button>
+        <div v-show="menu" class="absolute left-0 mt-2 w-64 rounded-md shadow-lg bg-gray-900 shadow-md">
+          <div id="menuList" class="py-2" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+            <template v-for="(item, i) in menuItems">
+              <hr v-if="item.name ==='divider'" :key="i" class="my-2 opacity-30">
+              <a
+                v-else
+                :key="i"
+                :href="item.url"
+                class="block px-4 py-1 text-xs text-white menuItem"
+                :class="!item.url ? 'cursor-default' : 'bg-fblue'"
+                role="menuitem"
+              >
+                <div v-if="item.name === 'GitHub Repo'" class="flex justify-between">
+                  <span>{{ item.name }}</span>
+                  <span>{{ version }}</span>
+                </div>
+                <template v-else>{{ item.name }}</template>
+              </a>
+            </template>
+          </div>
+        </div>
+      </div>
       <div class="flex-1">
         <div class="relative focus-within:text-gray-600 text-gray-400">
           <input
             id="searchField"
             type="text"
-            class="text-sm px-4 py-1 border focus:ring-gray-500 focus:border-gray-900 hover:border-gray-900 w-full border-gray-300 rounded focus:outline-none text-gray-600"
-            placeholder="Search"
+            class="text-xs px-4 py-1 border focus:ring-gray-500 focus:border-gray-900 hover:border-gray-900 w-full border-gray-300 rounded focus:outline-none text-gray-600 h-8"
+            placeholder="Search artists and tracks"
             v-model="searchQuery"
           >
         </div>
       </div>
       <div>
         <button
-          class="text-sm bg-blue-600 hover:bg-blue-700 text-white border border-blue-600 py-1 px-4 rounded disabled:opacity-50"
+          class="text-xs bg-blue-600 text-white border border-blue-600 py-1 px-4 rounded disabled:opacity-50 h-8 cursor-default"
+          :class="searchQuery.length !== 0 ? 'hover:bg-blue-700' : 'cursor-default'"
           @click="querySpotify()"
           :disabled="searchQuery.length === 0"
         >
@@ -22,30 +56,45 @@
         </button>
       </div>
     </div>
+    <!-- type -->
     <hr class="divide-solid my-2">
-    <div class="flex pb-4 space-x-2 px-4">
-      <div class="flex-initial divide-gray-800">
+    <div class="flex justify-between px-4">
+      <div class="flex space-x-1">
+        <div class="flex-initial">
+          <button
+            class="text-xs px-2 py-1 focus:outline-none rounded h-8 font-semibold cursor-default"
+            :class="activeSearchView === 'artists' ? 'text-gray-900': 'text-gray-400 hover:text-gray-700'"
+            @click="activeSearchView = 'artists', activeSearchArr = artists"
+          >
+            Artists
+          </button>
+        </div>
+        <div class="flex-initial">
+          <button 
+            class="text-xs px-2 py-1 focus:outline-none rounded h-8 font-semibold cursor-default"
+            :class="activeSearchView === 'tracks' ? 'text-gray-900': 'text-gray-400 hover:text-gray-700'"
+            @click="activeSearchView = 'tracks', activeSearchArr = tracks"
+          >
+            Tracks
+          </button>
+        </div>
+      </div>
+      <template v-if="activeSearchView === 'tracks'">
         <div
-          class="cursor-pointer"
-          :class="activeSearchView === 'artists' ? 'font-bold': ''"
-          @click="activeSearchView = 'artists', activeSearchArr = artists"
+          v-if="playing === false"
+          class="text-xs px-2 py-1 focus:outline-none rounded h-8 font-semibold cursor-default"
         >
-          Artists ({{ artists.length }})
+          Double click on the thumbnail to play preview
         </div>
-        <hr v-if="activeSearchView === 'artists'" class="divide-solid" style="border-top-width:2px">
-      </div>
-      <div class="flex-initial divide-gray-800">
-        <div 
-          class="cursor-pointer"
-          :class="activeSearchView === 'tracks' ? 'font-bold': ''"
-          @click="activeSearchView = 'tracks', activeSearchArr = tracks"
-        >
-          Tracks ({{ tracks.length }})
-        </div>
-        <hr v-if="activeSearchView === 'tracks'" class="divide-solid" style="border-top-width:2px">
-      </div>
+        <button v-else @click="stopTrack()" class="text-xs px-2 py-1 focus:outline-none rounded h-8 font-semibold cursor-default">
+          Stop
+        </button>
+      </template>
+      <audio id="audioPlayer" src=""></audio>
     </div>
-    <div v-if="activeSearchView === 'artists'" class="overflow-y-auto overflow-x-hidden" style="height: calc(100vh - 152px);">
+    <hr class="divide-solid my-2">
+    <!-- search results -->
+    <div v-if="activeSearchView === 'artists'" class="overflow-y-auto overflow-x-hidden" style="height: calc(100vh - 163px);">
       <div v-if="activeSearchArr.length !== 0" class="grid grid-cols-3 gap-4 px-4">
         <div v-for="(item ,i) in activeSearchArr" :key="i" :id="item.name">
           <div
@@ -63,7 +112,7 @@
               >
             </template>
           </div>
-          <div class="text-xs">{{ item.name }}</div>
+          <div class="text-xs pt-1">{{ item.name }}</div>
         </div>
       </div>
     </div>
@@ -80,6 +129,7 @@
                 class="object-cover w-full h-full rounded h-32"
                 :src="item.album.images[0].url"
                 :alt="item.name"
+                @dblclick="playTrack(item.preview_url)"
                 @click="addToCanvas(item.album.images[0].url), addToSelection(item.name, item.album.images[0].url, item.id)"
                 v-longclick="() => setLongpress()"
               >
@@ -89,20 +139,22 @@
         </div>
       </div>
     </div>
+    <!-- controls -->
     <div class="absolute bottom-0 left-0 right-0 bg-white">
       <hr class="divide-solid my-2">
       <div class="flex space-x-2 h-full px-4 pb-2 justify-end	">
         <template v-if="longpress === false">
           <button
             v-if="activeSearchArr.length !== total"
-            class="text-sm bg-blue-200 hover:bg-blue-300 text-blue-600 border border-blue-600 py-1 px-4 rounded h-full disabled:opacity-50 flex-initial"
+            class="text-xs bg-blue-200 hover:bg-blue-300 text-blue-600 border border-blue-600 py-1 px-4 rounded disabled:opacity-50 flex-initial h-8 cursor-default"
             @click="paginateSpotify()"
             :disabled="activeSearchArr.length === 0"
           >
             Load More
           </button>
           <button
-            class="text-sm bg-red-200 hover:bg-red-300 text-red-600 border border-red-600 py-1 px-4 rounded h-full disabled:opacity-50 flex-initial"
+            class="text-xs bg-red-200 text-red-600 border border-red-600 py-1 px-4 rounded flex-initial h-8 cursor-default"
+            :class="activeSearchArr.length === 0 ? 'disabled:opacity-50' : 'hover:bg-red-300'"
             @click="clearSearch()"
             :disabled="activeSearchArr.length === 0"
           >
@@ -111,14 +163,14 @@
         </template>
          <template v-if="arraySel.length > 0">
           <button
-            class="text-sm bg-blue-200 hover:bg-blue-300 text-blue-600 border border-blue-600 py-1 px-4 rounded h-full disabled:opacity-50 flex-initial"
+            class="text-xs bg-blue-200 hover:bg-blue-300 text-blue-600 border border-blue-600 py-1 px-4 rounded disabled:opacity-50 flex-initial h-8 cursor-default"
             @click="resetLongpress()"
             :disabled="activeSearchArr.length === 0"
           >
             Clear Selection ({{ arraySel.length }})
           </button>
           <button
-            class="text-sm bg-red-200 hover:bg-red-300 text-red-600 border border-red-600 py-1 px-4 rounded h-full disabled:opacity-50 flex-initial"
+            class="text-xs bg-red-200 hover:bg-red-300 text-red-600 border border-red-600 py-1 px-4 rounded disabled:opacity-50 flex-initial h-8 cursor-default"
             @click="addSelectionToCanvas()"
           >
             Insert
@@ -142,30 +194,69 @@ export default {
   name: "SearchSpotify",
   data() {
     return {
-      activeEmptyView: 'new_releases',
-      emptyHeader: ['new_releases, browse_all'],
+      // activeEmptyView: 'new_releases',
+      // emptyHeader: ['new_releases, browse_all'],
+      // activeEmptyhArr: [],
+      // categories: [],
       activeSearchView: 'artists',
-      searchHheader: ['artists, tracks'],
+      activeSearchArr: [],
       releases: [],
-      categories: [],
-      activeEmptyhArr: [],
       artists: [],
       tracks: [],
-      activeSearchArr: [],
       searchType: 'artist,track',
       searchQuery: '',
-      limit: 30,
+      limit: 50,
       offset: 0,
       total: 0,
-      next: null,
-      previous: null,
       size: {
         width: 800,
         height: 800
       },
       arraySel: [],
       longpress: false,
+      menu: false,
+      previewTrack: '',
+      playing: false,
+      version: 'V1.0.0',
+      menuItems: [
+        {
+          name: 'GitHub Repo',
+          url: 'https://github.com/nathakits/spottie-figma-plugin'
+        },
+        {
+          name: 'divider',
+          url: false
+        },
+        {
+          name: 'Patreon',
+          url: 'https://github.com/nathakits/spottie-figma-plugin'
+        },
+        {
+          name: 'Buy Me a coffee',
+          url: 'https://github.com/nathakits/spottie-figma-plugin'
+        },
+        {
+          name: 'divider',
+          url: false
+        },
+        {
+          name: 'By Nathakit Sae-Tan',
+          url: 'https://nathakits.com'
+        },
+        {
+          name: 'Support: natdev@gmail.com',
+          url: 'mailto:natdev.tan@gmail.com'
+        }
+      ]
     };
+  },
+  mounted(){
+    // var y = document.getElementById('menuList');
+    document.addEventListener('mouseup', this.closeMenu)
+  },
+  beforeDestroy() {
+    // var y = document.getElementById('menuList');
+    document.removeEventListener('mouseup', this.closeMenu)
   },
   methods: {
     querySpotify() {
@@ -332,8 +423,49 @@ export default {
         el.classList.remove('opacity-20')
       })
       this.arraySel = []
+    },
+    closeMenu(e) {
+      var menubtn = document.getElementById('menuBtn');
+      var menu = document.getElementById('menuList');
+      var isClickInside = menu.contains(e.target);
+      var isMenuBtn = menubtn.contains(e.target)
+      if (!isClickInside && !isMenuBtn) {
+        console.log(`close menu`);
+        this.menu = false
+      } else {
+        if (e.target.href) {
+          this.menu = false
+        }
+      }
+    },
+    playTrack(url) {
+      var audio = document.getElementById('audioPlayer')
+      audio.src = url
+      if (audio.src) {
+        var playPromise = audio.play()
+        if (playPromise !== undefined) {
+          playPromise.then(() => {
+            this.playing = true
+          }).catch(() => {
+            notify(`Can't play this track`)
+          })
+        }
+        audio.onended = () => {
+          this.playing = false
+          console.log(`ended`)
+        }
+      }
+    },
+    stopTrack() {
+      var audio = document.getElementById('audioPlayer')
+      audio.src = ''
     }
   }
 };
 </script>
 
+<style>
+.bg-fblue:hover {
+  background-color:#18a0fb;
+}
+</style>
