@@ -99,11 +99,11 @@
     <hr class="divide-solid my-2">
     <!-- search results -->
     <div v-if="activeSearchView === 'artists'" class="overflow-y-auto overflow-x-hidden" style="height: calc(100vh - 163px);">
-      <div v-if="activeSearchArr.length !== 0" class="grid grid-cols-3 gap-4 px-4">
+      <div v-if="activeSearchArr.length !== 0" class="grid grid-cols-3 gap-4 px-4 pt-1">
         <div v-for="(item ,i) in activeSearchArr" :key="i" :id="item.name">
           <div
-            class="box bg-gray-400 rounded h-32"
-            :class="item.images.length > 0 ? 'hover:opacity-50 cursor-pointer' : ''"
+            class="box rounded h-32 relative"
+            :class="item.images.length > 0 ? 'hover:opacity-50 cursor-pointer' : 'bg-gray-400'"
           >
             <template v-if="item.images.length > 0">
               <img
@@ -124,7 +124,7 @@
       <div v-if="activeSearchArr.length !== 0" class="grid grid-cols-3 gap-4 px-4">
         <div v-for="(item ,i) in activeSearchArr" :key="i" :id="item.name">
           <div
-            class="box bg-gray-400 rounded h-32"
+            class="box bg-gray-400 rounded h-32 relative"
             :class="item.album.images.length > 0 ? 'hover:opacity-50 cursor-pointer' : ''"
           >
             <template v-if="item.album.images.length > 0">
@@ -165,17 +165,18 @@
             Clear Search
           </button>
         </template>
-         <template v-if="arraySel.length > 0">
+         <template v-if="arraySel.length >= 0 && longpress === true">
           <button
-            class="text-xs bg-blue-200 hover:bg-blue-300 text-blue-600 border border-blue-600 py-1 px-4 rounded disabled:opacity-50 flex-initial h-8 cursor-default"
+            class="text-xs text-gray-900 border border-gray-900 py-1 px-4 rounded disabled:opacity-50 flex-initial h-8 cursor-default"
             @click="resetLongpress()"
             :disabled="activeSearchArr.length === 0"
           >
             Clear Selection ({{ arraySel.length }})
           </button>
           <button
-            class="text-xs bg-red-200 hover:bg-red-300 text-red-600 border border-red-600 py-1 px-4 rounded disabled:opacity-50 flex-initial h-8 cursor-default"
+            class="text-xs text-gray-900 border border-gray-900 py-1 px-4 rounded disabled:opacity-50 flex-initial h-8 cursor-default"
             @click="addSelectionToCanvas()"
+            :disabled="arraySel.length === 0"
           >
             Insert
           </button>
@@ -381,12 +382,14 @@ export default {
           var index = this.arraySel.indexOf(dupObj)
           this.arraySel.splice(index, 1)
           var clickObj = document.getElementById(id)
-          clickObj.classList.remove('opacity-20')
+          clickObj.classList.remove('opacity-30')
+          clickObj.parentElement.classList.remove('selected-blue')
         }
         else {
           // else add into array
           var select = document.getElementById(id)
-          select.classList.add('opacity-20')
+          select.classList.add('opacity-30')
+          select.parentElement.classList.add('selected-blue')
           this.arraySel.push(obj)
         }        
       }
@@ -420,9 +423,13 @@ export default {
     resetLongpress() {
       this.longpress = false
       // remove all opacity classes
-      var arr = document.querySelectorAll('.opacity-20')
-      arr.forEach(el => {
-        el.classList.remove('opacity-20')
+      var borderArr = document.querySelectorAll('.selected-blue')
+      borderArr.forEach(el => {
+        el.classList.remove('selected-blue')
+      })
+      var opacityArr = document.querySelectorAll('.opacity-30')
+      opacityArr.forEach(el => {
+        el.classList.remove('opacity-30')
       })
       this.arraySel = []
     },
@@ -469,5 +476,9 @@ export default {
 <style>
 .bg-fblue:hover {
   background-color:#18a0fb;
+}
+
+.selected-blue {
+  box-shadow: 0 0 0 2px #18a0fb;
 }
 </style>
