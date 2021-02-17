@@ -82,12 +82,16 @@
       <template v-if="activeSearchView === 'tracks'">
         <div
           v-if="playing === false"
-          class="text-xs px-2 py-1 focus:outline-none rounded h-8 font-semibold cursor-default"
+          class="text-xs px-2 py-1 focus:outline-none rounded h-8 cursor-default text-gray-500 flex items-center"
         >
-          Double click on the thumbnail to play preview
+          Double click on a thumbnail to play preview track
         </div>
-        <button v-else @click="stopTrack()" class="text-xs px-2 py-1 focus:outline-none rounded h-8 font-semibold cursor-default">
-          Stop
+        <button
+          v-else
+          @click="stopTrack()"
+          class="text-xs px-2 py-1 focus:outline-none rounded h-8 cursor-default border-gray-900 text-gray-900 border"
+        >
+          Stop playing
         </button>
       </template>
       <audio id="audioPlayer" src=""></audio>
@@ -146,15 +150,15 @@
         <template v-if="longpress === false">
           <button
             v-if="activeSearchArr.length !== total"
-            class="text-xs bg-blue-200 hover:bg-blue-300 text-blue-600 border border-blue-600 py-1 px-4 rounded disabled:opacity-50 flex-initial h-8 cursor-default"
+            class="text-xs text-gray-900 border border-gray-900 py-1 px-4 rounded disabled:opacity-50 flex-initial h-8 cursor-default"
             @click="paginateSpotify()"
             :disabled="activeSearchArr.length === 0"
           >
             Load More
           </button>
           <button
-            class="text-xs bg-red-200 text-red-600 border border-red-600 py-1 px-4 rounded flex-initial h-8 cursor-default"
-            :class="activeSearchArr.length === 0 ? 'disabled:opacity-50' : 'hover:bg-red-300'"
+            class="text-xs text-gray-900 border border-gray-900 py-1 px-4 rounded disabled:opacity-50 flex-initial h-8 cursor-default"
+            :class="activeSearchArr.length === 0 ? 'disabled:opacity-50' : ''"
             @click="clearSearch()"
             :disabled="activeSearchArr.length === 0"
           >
@@ -444,6 +448,7 @@ export default {
           playPromise.then(() => {
             this.playing = true
           }).catch(() => {
+            this.playing = false
             notify(`Can't play this track`)
           })
         }
@@ -455,6 +460,7 @@ export default {
     stopTrack() {
       var audio = document.getElementById('audioPlayer')
       audio.src = ''
+      this.playing = false
     }
   }
 };
