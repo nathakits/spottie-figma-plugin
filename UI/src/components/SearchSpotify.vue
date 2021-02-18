@@ -133,8 +133,7 @@
                 class="object-cover w-full h-full rounded h-32"
                 :src="item.album.images[0].url"
                 :alt="item.name"
-                @dblclick="playTrack(item.preview_url)"
-                @click="addToCanvas(item.album.images[0].url), addToSelection(item.name, item.album.images[0].url, item.id)"
+                @click="handleClick(item.album.images[0].url, item.preview_url), addToSelection(item.name, item.album.images[0].url, item.id)"
                 v-longclick="() => setLongpress()"
               >
             </template>
@@ -190,6 +189,7 @@
 import axios from 'axios';
 import { notify, createImage, createImageArray } from "../helpers/figma-messages";
 
+var pluginVersion = require('../../package.json').version
 var qs = require('qs');
 var data = qs.stringify({
  'grant_type': 'client_credentials' 
@@ -199,13 +199,8 @@ export default {
   name: "SearchSpotify",
   data() {
     return {
-      // activeEmptyView: 'new_releases',
-      // emptyHeader: ['new_releases, browse_all'],
-      // activeEmptyhArr: [],
-      // categories: [],
       activeSearchView: 'artists',
       activeSearchArr: [],
-      releases: [],
       artists: [],
       tracks: [],
       searchType: 'artist,track',
@@ -220,9 +215,10 @@ export default {
       arraySel: [],
       longpress: false,
       menu: false,
-      previewTrack: '',
       playing: false,
-      version: 'V1.0.0',
+      version: `V${pluginVersion}`,
+      clickCounter: 0,
+      timer: null,
       menuItems: [
         {
           name: 'GitHub Repo',
@@ -351,6 +347,23 @@ export default {
       var input = document.querySelector('input')
       input.focus()
     },
+    handleClick(imageURL, trackURL) {
+      this.clickCounter++
+      if (this.clickCounter === 1) {
+        this.timer = setTimeout(() => {
+          this.clickCounter = 0
+          this.addToCanvas(imageURL)
+        }, 200);
+      } else if (this.clickCounter === 2) {
+        clearTimeout(this.timer)
+        this.clickCounter = 0
+        if (trackURL) {
+          this.playTrack(trackURL)
+        } else {
+          notify(`Track not available`)
+        }
+      }
+    },
     addToCanvas(imageURL) {
       if (this.longpress === false) {
         axios({
@@ -447,6 +460,7 @@ export default {
       }
     },
     playTrack(url) {
+      clearTimeout(this.timer)
       var audio = document.getElementById('audioPlayer')
       audio.src = url
       if (audio.src) {
@@ -454,8 +468,9 @@ export default {
         if (playPromise !== undefined) {
           playPromise.then(() => {
             this.playing = true
-          }).catch(() => {
+          }).catch((err) => {
             this.playing = false
+            console.log(err)
             notify(`Can't play this track`)
           })
         }
