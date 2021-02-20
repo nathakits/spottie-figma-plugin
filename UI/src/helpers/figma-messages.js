@@ -8,8 +8,8 @@ const closePlugin = () => {
   parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
 }
 
-const notify = (message) => {
-  parent.postMessage({ pluginMessage: { type: 'msg', message } }, '*')
+const notify = (message, timeout) => {
+  parent.postMessage({ pluginMessage: { type: 'msg', message, timeout } }, '*')
 }
 
 const createImage = (buffer, size) => {
