@@ -104,4 +104,7 @@ figma.ui.onmessage = msg => {
             });
         }
     }
+    if (msg.type === 'msg') {
+        figma.notify(msg.message, msg.timeout);
+    }
 };

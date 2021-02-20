@@ -92,7 +92,7 @@ figma.ui.onmessage = msg => {
           figma.notify(`Please select a fillable object`)
         }
       });
-    }
+  }
     else if (currentSel.length === 0) {
       var nodes = []
       // viewport
@@ -112,5 +112,9 @@ figma.ui.onmessage = msg => {
         nodes.push(rect)
       });
     }
+  }
+
+  if (msg.type === 'msg') {
+    figma.notify(msg.message, msg.timeout)
   }
 };
