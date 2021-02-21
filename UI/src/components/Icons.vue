@@ -10,6 +10,11 @@
         <path d="M15 0.5V26.875C13.525 26.025 11.825 25.5 10 25.5C4.475 25.5 0 29.975 0 35.5C0 41.025 4.475 45.5 10 45.5C15.525 45.5 20 41.025 20 35.5V10.5H30V0.5H15ZM10 40.5C7.25 40.5 5 38.25 5 35.5C5 32.75 7.25 30.5 10 30.5C12.75 30.5 15 32.75 15 35.5C15 38.25 12.75 40.5 10 40.5Z" fill="white"/>
       </svg>
     </template>
+    <template v-else-if=" name === 'menu'">
+      <svg width="18" height="12" viewBox="0 0 18 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 12H18V10H0V12ZM0 7H18V5H0V7ZM0 0V2H18V0H0Z" fill="black"/>
+      </svg>
+    </template>
   </div>
 </template>
 
