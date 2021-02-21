@@ -2,39 +2,7 @@
   <div class="h-full">
     <!-- header -->
     <div class="flex items-center space-x-2 px-4">
-      <div class="relative">
-        <button
-          id="menuBtn"
-          class="text-xs text-gray-900 hover:bg-gray-200 py-1 px-4 rounded disabled:opacity-50 h-8 focus:outline-none cursor-default"
-          @click="menu = !menu"
-        >
-          <svg width="18" height="12" viewBox="0 0 18 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 12H18V10H0V12ZM0 7H18V5H0V7ZM0 0V2H18V0H0Z" fill="black"/>
-          </svg>
-        </button>
-        <div v-show="menu" class="absolute left-0 mt-2 w-64 rounded-md shadow-lg bg-gray-900 shadow-md z-50">
-          <div id="menuList" class="py-2" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-            <template v-for="(item, i) in menuItems">
-              <hr v-if="item.name ==='divider'" :key="i" class="my-2 opacity-30">
-              <a
-                v-else
-                :key="i"
-                :href="item.url"
-                class="block px-4 py-1 text-xs text-white menuItem"
-                :class="!item.url ? 'cursor-default' : 'bg-fblue'"
-                role="menuitem"
-                target="_blank"
-              >
-                <div v-if="item.name === 'GitHub Repo'" class="flex justify-between">
-                  <span>{{ item.name }}</span>
-                  <span>{{ version }}</span>
-                </div>
-                <template v-else>{{ item.name }}</template>
-              </a>
-            </template>
-          </div>
-        </div>
-      </div>
+      <Menu/>
       <div class="flex-1">
         <div class="relative focus-within:text-gray-600 text-gray-400">
           <input
@@ -191,8 +159,8 @@
 import axios from 'axios';
 import { notify, createImage, createImageArray } from "../helpers/figma-messages";
 import Icons from "./Icons.vue";
+import Menu from "./Menu.vue"
 
-var pluginVersion = require('../../package.json').version
 var qs = require('qs');
 var data = qs.stringify({
  'grant_type': 'client_credentials' 
@@ -200,7 +168,7 @@ var data = qs.stringify({
 
 export default {
   name: "SearchSpotify",
-  components: {Icons},
+  components: {Icons, Menu},
   data() {
     return {
       activeSearchView: 'artists',
@@ -220,46 +188,9 @@ export default {
       longpress: false,
       menu: false,
       playing: false,
-      version: `V${pluginVersion}`,
       clickCounter: 0,
       timer: null,
-      menuItems: [
-        {
-          name: 'GitHub Repo',
-          url: 'https://github.com/nathakits/spottie-figma-plugin'
-        },
-        {
-          name: 'divider',
-          url: false
-        },
-        {
-          name: 'Patreon',
-          url: 'https://github.com/nathakits/spottie-figma-plugin'
-        },
-        {
-          name: 'Buy Me a coffee',
-          url: 'https://github.com/nathakits/spottie-figma-plugin'
-        },
-        {
-          name: 'divider',
-          url: false
-        },
-        {
-          name: 'By Nathakit Sae-Tan',
-          url: 'https://nathakits.com'
-        },
-        {
-          name: 'Support: natdev@gmail.com',
-          url: 'mailto:natdev.tan@gmail.com'
-        }
-      ]
     };
-  },
-  mounted(){
-    document.addEventListener('mouseup', this.closeMenu)
-  },
-  beforeDestroy() {
-    document.removeEventListener('mouseup', this.closeMenu)
   },
   methods: {
     querySpotify() {
@@ -449,19 +380,6 @@ export default {
         el.classList.remove('opacity-30')
       })
       this.arraySel = []
-    },
-    closeMenu(e) {
-      var menubtn = document.getElementById('menuBtn');
-      var menu = document.getElementById('menuList');
-      var isClickInside = menu.contains(e.target);
-      var isMenuBtn = menubtn.contains(e.target)
-      if (!isClickInside && !isMenuBtn) {
-        this.menu = false
-      } else {
-        if (e.target.href) {
-          this.menu = false
-        }
-      }
     },
     playTrack(url) {
       clearTimeout(this.timer)
