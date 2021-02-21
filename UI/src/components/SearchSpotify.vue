@@ -12,7 +12,7 @@
             <path d="M0 12H18V10H0V12ZM0 7H18V5H0V7ZM0 0V2H18V0H0Z" fill="black"/>
           </svg>
         </button>
-        <div v-show="menu" class="absolute left-0 mt-2 w-64 rounded-md shadow-lg bg-gray-900 shadow-md">
+        <div v-show="menu" class="absolute left-0 mt-2 w-64 rounded-md shadow-lg bg-gray-900 shadow-md z-50">
           <div id="menuList" class="py-2" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
             <template v-for="(item, i) in menuItems">
               <hr v-if="item.name ==='divider'" :key="i" class="my-2 opacity-30">
@@ -23,6 +23,7 @@
                 class="block px-4 py-1 text-xs text-white menuItem"
                 :class="!item.url ? 'cursor-default' : 'bg-fblue'"
                 role="menuitem"
+                target="_blank"
               >
                 <div v-if="item.name === 'GitHub Repo'" class="flex justify-between">
                   <span>{{ item.name }}</span>
@@ -40,7 +41,7 @@
             id="searchField"
             type="text"
             class="text-xs px-4 py-1 border focus:ring-gray-500 focus:border-gray-900 hover:border-gray-900 w-full border-gray-300 rounded focus:outline-none text-gray-600 h-8"
-            placeholder="Search artists and tracks"
+            placeholder="Search"
             v-model="searchQuery"
           >
         </div>
@@ -84,7 +85,7 @@
           v-if="playing === false"
           class="text-xs px-2 py-1 focus:outline-none rounded h-8 cursor-default text-gray-500 flex items-center"
         >
-          Double click on a thumbnail to play preview track
+          Double click on a thumbnail to preview track
         </div>
         <button
           v-else
@@ -98,48 +99,49 @@
     </div>
     <hr class="divide-solid my-2">
     <!-- search results -->
-    <div v-if="activeSearchView === 'artists'" class="overflow-y-auto overflow-x-hidden" style="height: calc(100vh - 163px);">
+    <div class="overflow-y-auto overflow-x-hidden" style="height: calc(100vh - 163px);">
       <div v-if="activeSearchArr.length !== 0" class="grid grid-cols-3 gap-4 px-4 pt-1">
-        <div v-for="(item ,i) in activeSearchArr" :key="i" :id="item.name">
-          <div
-            class="box rounded h-32 relative"
-            :class="item.images.length > 0 ? 'hover:opacity-50 cursor-pointer' : 'bg-gray-400'"
-          >
-            <template v-if="item.images.length > 0">
+        <template v-for="(item ,i) in activeSearchArr">
+          <div v-if="item !== null" :key="i" :id="item.name ? item.name : ''">
+            <!-- artists -->
+            <div
+              v-if="activeSearchView === 'artists'"
+              class="box rounded h-32 w-full relative"
+              :class="item.images.length > 0 ? 'hover:opacity-50 cursor-pointer' : 'bg-green-700'"
+            >
               <img
+                v-if="item.images.length > 0"
                 :id="`${item.id}`"
-                class="object-cover w-full h-full rounded h-32"
-                :src="item.images[0].url"
+                :src="item.images[1].url"
                 :alt="item.name"
+                loading=lazy
+                class="object-cover w-full h-full rounded"
                 @click="addToCanvas(item.images[0].url), addToSelection(item.name, item.images[0].url, item.id)"
                 v-longclick="() => setLongpress()"
               >
-            </template>
+              <Icons v-else name="artist"/>
+            </div>
+            <!-- tracks -->
+            <div
+              v-else-if="activeSearchView === 'tracks'"
+              class="box rounded h-32 w-full relative"
+              :class="item.album.images.length > 0 ? 'hover:opacity-50 cursor-pointer' : 'bg-green-700'"
+            >
+                <img
+                  v-if="item.album.images.length > 0"
+                  :id="`${item.id}`"
+                  :src="item.album.images[1].url"
+                  :alt="item.name"
+                  loading=lazy
+                  class="object-cover w-full h-full rounded "
+                  @click="handleClick(item.album.images[0].url, item.preview_url), addToSelection(item.name, item.album.images[0].url, item.id)"
+                  v-longclick="() => setLongpress()"
+                >
+                <Icons v-else name="track"/>
+            </div>
+            <div class="text-xs pt-1">{{ item.name }}</div>
           </div>
-          <div class="text-xs pt-1">{{ item.name }}</div>
-        </div>
-      </div>
-    </div>
-    <div v-if="activeSearchView === 'tracks'" class="overflow-y-auto overflow-x-hidden" style="height: calc(100vh - 152px);">
-      <div v-if="activeSearchArr.length !== 0" class="grid grid-cols-3 gap-4 px-4">
-        <div v-for="(item ,i) in activeSearchArr" :key="i" :id="item.name">
-          <div
-            class="box bg-gray-400 rounded h-32 relative"
-            :class="item.album.images.length > 0 ? 'hover:opacity-50 cursor-pointer' : ''"
-          >
-            <template v-if="item.album.images.length > 0">
-              <img
-                :id="`${item.id}`"
-                class="object-cover w-full h-full rounded h-32"
-                :src="item.album.images[0].url"
-                :alt="item.name"
-                @click="handleClick(item.album.images[0].url, item.preview_url), addToSelection(item.name, item.album.images[0].url, item.id)"
-                v-longclick="() => setLongpress()"
-              >
-            </template>
-          </div>
-          <div class="text-xs">{{ item.name }}</div>
-        </div>
+        </template>
       </div>
     </div>
     <!-- controls -->
@@ -188,6 +190,7 @@
 <script>
 import axios from 'axios';
 import { notify, createImage, createImageArray } from "../helpers/figma-messages";
+import Icons from "./Icons.vue";
 
 var pluginVersion = require('../../package.json').version
 var qs = require('qs');
@@ -197,6 +200,7 @@ var data = qs.stringify({
 
 export default {
   name: "SearchSpotify",
+  components: {Icons},
   data() {
     return {
       activeSearchView: 'artists',
@@ -360,7 +364,7 @@ export default {
         if (trackURL) {
           this.playTrack(trackURL)
         } else {
-          notify(`Track not available`)
+          notify(`Track not available`, {timeout: 1500})
         }
       }
     },
@@ -471,7 +475,6 @@ export default {
           }).catch((err) => {
             this.playing = false
             console.log(err)
-            notify(`Can't play this track`)
           })
         }
         audio.onended = () => {
