@@ -1,5 +1,6 @@
-// This plugin will open a modal to prompt the user to enter a number, and
-// it will then create that many rectangles on the screen.
+// This plugin enables users to search for artists and tracks
+// and insert images for design using the Spotify API. 
+// Credit to Spotify for the API.
 
 // This file holds the main code for the plugins. It has access to the *document*.
 // You can access browser APIs in the <script> tag inside "ui.html" which has a
@@ -29,7 +30,7 @@ figma.ui.onmessage = msg => {
           node.type === 'STAR' ||
           node.type === 'VECTOR'
         ) {
-          // inset fill to node
+          // insert fill to node
           var buffer = msg.buffer
           var hash = figma.createImage(buffer).hash
           node.fills = [
@@ -53,7 +54,6 @@ figma.ui.onmessage = msg => {
       // set x and y coordinates with viewport values
       rect.x = viewport.x
       rect.y = viewport.y
-      // hard code rect size
       rect.resize(msg.size.width, msg.size.height)
       // set type to IMAGE and set fill with image hash data
       rect.fills = [
@@ -65,7 +65,6 @@ figma.ui.onmessage = msg => {
   }
 
   if (msg.type === 'create-image-array') {
-    // const nodes: SceneNode[] = [];
     // get current selection
     var currentSel = figma.currentPage.selection
     // if selection has an object
@@ -80,19 +79,30 @@ figma.ui.onmessage = msg => {
           node.type === 'STAR' ||
           node.type === 'VECTOR'
         ) {
-          // inset fill to node
-          
-          var buffer = msg.array[i]
-          var hash = figma.createImage(buffer).hash
-          node.fills = [
-            { type: 'IMAGE', scaleMode: 'FILL', imageHash: hash }
-          ];
+          try {
+            // insert fill to node
+            var thumbs = msg.array
+            var buffer = thumbs[i]
+            var hash = figma.createImage(buffer).hash
+            node.fills = [
+              { type: 'IMAGE', scaleMode: 'FILL', imageHash: hash }
+            ];
+          } catch (error) {
+            // if number of selected objects is more than the images
+            // then no buffer to add
+            var pluralize = `image${ thumbs.length > 1 ? 's' : ''}`
+            var message = `Only added ${thumbs.length} ${pluralize} to selection. Please select more thumbnails.`
+            var noti = figma.notify(message)
+            setTimeout(() => {
+              noti.cancel()
+            }, 3000);
+          }
         }
         else {
           figma.notify(`Please select a fillable object`)
         }
       });
-  }
+    }
     else if (currentSel.length === 0) {
       var nodes = []
       // viewport
