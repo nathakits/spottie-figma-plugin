@@ -54,11 +54,11 @@ export default {
         },
         {
           name: 'Patreon',
-          url: 'https://github.com/nathakits/spottie-figma-plugin'
+          url: 'https://www.patreon.com/nathakits'
         },
         {
-          name: 'Buy Me a coffee',
-          url: 'https://github.com/nathakits/spottie-figma-plugin'
+          name: 'Buy me a coffee',
+          url: 'https://ko-fi.com/nathakits'
         },
         {
           name: 'divider',
@@ -70,7 +70,7 @@ export default {
         },
         {
           name: 'Support: natdev@gmail.com',
-          url: 'mailto:natdev.tan@gmail.com'
+          url: 'mailto:nathakit.tan@gmail.com'
         }
       ],
     }
