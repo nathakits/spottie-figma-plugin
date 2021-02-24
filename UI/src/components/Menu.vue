@@ -18,7 +18,7 @@
             class="block px-4 py-1 text-xs text-white menuItem"
             :class="!item.url ? 'cursor-default' : 'bg-fblue'"
             role="menuitem"
-            :target="_blank"
+            target="_blank"
             rel="noopener noreferrer"
           >
             <div v-if="item.name === 'GitHub Repo'" class="flex justify-between">
