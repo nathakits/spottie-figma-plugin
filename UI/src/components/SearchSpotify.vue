@@ -32,6 +32,15 @@
         <div class="flex-initial">
           <button
             class="text-xs px-2 py-1 focus:outline-none rounded h-8 font-semibold cursor-default"
+            :class="activeSearchView === 'new-releases' ? 'text-gray-900': 'text-gray-400 hover:text-gray-700'"
+            @click="activeSearchView = 'new-releases'"
+          >
+            New releases
+          </button>
+        </div>
+        <div class="flex-initial">
+          <button
+            class="text-xs px-2 py-1 focus:outline-none rounded h-8 font-semibold cursor-default"
             :class="activeSearchView === 'artists' ? 'text-gray-900': 'text-gray-400 hover:text-gray-700'"
             @click="activeSearchView = 'artists', activeSearchArr = artists"
           >
@@ -53,7 +62,7 @@
           v-if="playing === false"
           class="text-xs px-2 py-1 focus:outline-none rounded h-8 cursor-default text-gray-500 flex items-center"
         >
-          Double click on a thumbnail to preview track
+          Double click thumbnail to preview track
         </div>
         <button
           v-else
@@ -68,18 +77,80 @@
     <hr class="divide-solid my-2">
     <!-- search results -->
     <div class="overflow-y-auto overflow-x-hidden" style="height: calc(100vh - 163px);">
-      <div v-if="activeSearchArr.length !== 0" class="grid grid-cols-3 gap-4 px-4 pt-1">
-        <template v-for="(item ,i) in activeSearchArr">
-          <div v-if="item !== null" :key="i" :id="item.name ? item.name : ''">
-            <!-- artists -->
-            <div
-              v-if="activeSearchView === 'artists'"
-              class="box rounded h-32 w-full relative"
-              :class="item.images.length > 0 ? 'hover:opacity-50 cursor-pointer' : 'bg-green-700'"
-            >
+      <template v-if="activeSearchView !== 'new-releases'">
+        <div
+          v-if="activeSearchArr.length !== 0"
+          class="grid grid-cols-3 gap-4 px-4 pt-1"
+        >
+          <template v-for="(item ,i) in activeSearchArr">
+            <div v-if="item !== null" :key="i" :id="item.name ? item.name : ''">
+              <!-- artists -->
+              <div
+                v-if="activeSearchView === 'artists'"
+                class="box rounded h-32 w-full relative"
+                :class="item.images.length > 0 ? 'hover:opacity-50 cursor-pointer' : 'bg-green-700'"
+              >
+                <img
+                  v-if="item.images.length > 0"
+                  :id="item.id"
+                  :src="item.images[1].url"
+                  :alt="item.name"
+                  loading=lazy
+                  class="object-cover w-full h-full rounded"
+                  @click="addToCanvas(item.images[0].url), addToSelection(item.name, item.images[0].url, item.id)"
+                  v-longclick="() => setLongpress()"
+                >
+                <Icons v-else name="artist"/>
+              </div>
+              <!-- tracks -->
+              <div
+                v-else-if="activeSearchView === 'tracks'"
+                class="box rounded h-32 w-full relative"
+                :class="item.album.images.length > 0 ? 'hover:opacity-50 cursor-pointer' : 'bg-green-700'"
+              >
+                  <img
+                    v-if="item.album.images.length > 0"
+                    :id="item.id"
+                    :src="item.album.images[1].url"
+                    :alt="item.name"
+                    loading=lazy
+                    class="object-cover w-full h-full rounded "
+                    @click="handleClick(item.album.images[0].url, item.preview_url), addToSelection(item.name, item.album.images[0].url, item.id)"
+                    v-longclick="() => setLongpress()"
+                  >
+                  <Icons v-else name="track"/>
+              </div>
+              <div class="text-xs pt-1 font-semibold">{{ item.name }}</div>
+              <p class="text-xs">
+                <template v-for="(artist, i) in item.artists" class="text-xs">{{ i > 0 ? `, ${artist.name}` : artist.name }}</template>
+              </p>
+            </div>
+          </template>
+        </div>
+        <div v-else class="flex justify-center items-center h-full">
+          <div 
+            class="text-center"
+            style="max-width:240px"
+          >
+            <template v-if="activeSearchView === 'artists'">
+              <h1 class="text-lg pb-2 font-semibold">Search Artists</h1>
+              <p class="text-xs">Get Spotify Catalog information about artists that match a keyword string.</p>
+            </template>
+            <template v-if="activeSearchView === 'tracks'">
+              <h1 class="text-lg pb-2 font-semibold">Search Tracks</h1>
+              <p class="text-xs pb-1">Get Spotify Catalog information about tracks that match a keyword string and play previews.</p>
+            </template>
+          </div>
+        </div>
+      </template>
+      <template v-if="activeSearchView === 'new-releases'">
+        <div class="grid grid-cols-3 gap-4 px-4 pt-1">
+          <!-- new releases -->
+          <div v-for="(item ,i) in newReleasesArr" :key="i" :id="item.name">
+            <div class="box rounded h-32 w-full relative hover:opacity-50 cursor-pointer">
               <img
                 v-if="item.images.length > 0"
-                :id="`${item.id}`"
+                :id="item.id"
                 :src="item.images[1].url"
                 :alt="item.name"
                 loading=lazy
@@ -89,66 +160,71 @@
               >
               <Icons v-else name="artist"/>
             </div>
-            <!-- tracks -->
-            <div
-              v-else-if="activeSearchView === 'tracks'"
-              class="box rounded h-32 w-full relative"
-              :class="item.album.images.length > 0 ? 'hover:opacity-50 cursor-pointer' : 'bg-green-700'"
-            >
-                <img
-                  v-if="item.album.images.length > 0"
-                  :id="`${item.id}`"
-                  :src="item.album.images[1].url"
-                  :alt="item.name"
-                  loading=lazy
-                  class="object-cover w-full h-full rounded "
-                  @click="handleClick(item.album.images[0].url, item.preview_url), addToSelection(item.name, item.album.images[0].url, item.id)"
-                  v-longclick="() => setLongpress()"
-                >
-                <Icons v-else name="track"/>
-            </div>
-            <div class="text-xs pt-1">{{ item.name }}</div>
+            <div class="text-xs pt-1 pb-1 font-semibold">{{ item.name }}</div>
+            <p class="text-xs">
+              <template v-for="(artist, i) in item.artists" class="text-xs">{{ i > 0 ? `, ${artist.name}` : artist.name }}</template>
+            </p>
           </div>
-        </template>
-      </div>
+        </div>
+      </template>
     </div>
     <!-- controls -->
     <div class="absolute bottom-0 left-0 right-0 bg-white">
       <hr class="divide-solid my-2">
-      <div class="flex space-x-2 h-full px-4 pb-2 justify-end	">
-        <template v-if="longpress === false">
-          <button
-            v-if="activeSearchArr.length !== total"
-            class="text-xs text-gray-900 border border-gray-900 py-1 px-4 rounded disabled:opacity-50 flex-initial h-8 cursor-default"
-            @click="paginateSpotify()"
-            :disabled="activeSearchArr.length === 0"
-          >
-            Load More
-          </button>
-          <button
-            class="text-xs text-gray-900 border border-gray-900 py-1 px-4 rounded disabled:opacity-50 flex-initial h-8 cursor-default"
-            :class="activeSearchArr.length === 0 ? 'disabled:opacity-50' : ''"
-            @click="clearSearch()"
-            :disabled="activeSearchArr.length === 0"
-          >
-            Clear Search
-          </button>
+      <div class="flex space-x-2 h-full px-4 pb-2 justify-end">
+        <template v-if="activeSearchView !== 'new-releases'">
+          <template v-if="longpress === false">
+            <button
+              v-if="activeSearchArr.length !== total"
+              class="text-xs text-gray-900 border border-gray-900 py-1 px-4 rounded disabled:opacity-50 flex-initial h-8 cursor-default"
+              @click="paginateSearch()"
+              :disabled="activeSearchArr.length === 0"
+            >
+              Load More
+            </button>
+            <button
+              class="text-xs text-gray-900 border border-gray-900 py-1 px-4 rounded disabled:opacity-50 flex-initial h-8 cursor-default"
+              :class="activeSearchArr.length === 0 ? 'disabled:opacity-50' : ''"
+              @click="clearSearch()"
+              :disabled="activeSearchArr.length === 0"
+            >
+              Clear Search
+            </button>
+          </template>
+          <template v-if="arraySel.length >= 0 && longpress === true">
+            <button
+              class="text-xs text-gray-900 border border-gray-900 py-1 px-4 rounded disabled:opacity-50 flex-initial h-8 cursor-default"
+              @click="resetLongpress()"
+              :disabled="activeSearchArr.length === 0"
+            >
+              Clear Selection ({{ arraySel.length }})
+            </button>
+            <button
+              class="text-xs text-gray-900 border border-gray-900 py-1 px-4 rounded disabled:opacity-50 flex-initial h-8 cursor-default"
+              @click="addSelectionToCanvas()"
+              :disabled="arraySel.length === 0"
+            >
+              Insert
+            </button>
+          </template>
         </template>
-         <template v-if="arraySel.length >= 0 && longpress === true">
-          <button
-            class="text-xs text-gray-900 border border-gray-900 py-1 px-4 rounded disabled:opacity-50 flex-initial h-8 cursor-default"
-            @click="resetLongpress()"
-            :disabled="activeSearchArr.length === 0"
-          >
-            Clear Selection ({{ arraySel.length }})
-          </button>
-          <button
-            class="text-xs text-gray-900 border border-gray-900 py-1 px-4 rounded disabled:opacity-50 flex-initial h-8 cursor-default"
-            @click="addSelectionToCanvas()"
-            :disabled="arraySel.length === 0"
-          >
-            Insert
-          </button>
+        <template v-if="activeSearchView === 'new-releases'">
+          <template>
+            <button
+              class="text-xs text-gray-900 border border-gray-900 py-1 px-4 rounded disabled:opacity-50 flex-initial h-8 cursor-default"
+              :disabled="longpress === false"
+              @click="resetLongpress()"
+            >
+              Clear Selection ({{ arraySel.length }})
+            </button>
+            <button
+              class="text-xs text-gray-900 border border-gray-900 py-1 px-4 rounded disabled:opacity-50 flex-initial h-8 cursor-default"
+              @click="addSelectionToCanvas()"
+              :disabled="arraySel.length === 0"
+            >
+              Insert
+            </button>
+          </template>
         </template>
       </div>
     </div>
@@ -171,8 +247,9 @@ export default {
   components: {Icons, Menu},
   data() {
     return {
-      activeSearchView: 'artists',
+      activeSearchView: 'new-releases',
       activeSearchArr: [],
+      newReleasesArr: [],
       artists: [],
       tracks: [],
       searchType: 'artist,track',
@@ -186,13 +263,46 @@ export default {
       },
       arraySel: [],
       longpress: false,
-      menu: false,
       playing: false,
       clickCounter: 0,
       timer: null,
     };
   },
+  mounted() {
+    this.getNewReleases()
+  },
   methods: {
+    getNewReleases() {
+      this.arraySel = []
+      var auth = process.env.VUE_APP_SPOTIFY_AUTH_BASIC
+      axios({
+        method: 'post',
+        url: 'https://accounts.spotify.com/api/token',
+        data: data,
+        headers: {
+          'Authorization': `Basic ${auth}`,
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+      })
+      .then( response => {
+        axios({
+          method: 'get',
+          url: `https://api.spotify.com/v1/browse/new-releases?limit=30`,
+          headers: {
+            'Authorization': `Bearer ${response.data.access_token}`,
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+        })
+        .then( response => {
+          let res = response.data
+          this.newReleasesArr = res.albums.items
+          console.log(this.newReleasesArr);
+        })
+      }).catch( error => {
+        console.log(error)
+        notify(error)
+      });
+    },
     querySpotify() {
       this.arraySel = []
       if (this.searchQuery.length !== 0) {
@@ -233,7 +343,7 @@ export default {
         });
       }
     },
-    paginateSpotify() {
+    paginateSearch() {
       if (this.searchQuery.length !== 0 && this.artists.length !== 0) {
         var auth = process.env.VUE_APP_SPOTIFY_AUTH_BASIC
         axios({
