@@ -1,9 +1,9 @@
 {
-  "name": "figma-plugin-vue",
+  "name": "spottie-figma-plugin",
   "version": "1.0.0",
   "private": true,
-  "description": "Figma Plugin using Vue - everything you need to get started developing figma plugin using Vue SPA",
-  "author": "Manthankumar Satani",
+  "description": "Spottie - Search and insert images from Spotify.",
+  "author": "Nathakit Sae-Tan",
   "license": "MIT",
   "scripts": {
     "serve": "NODE_ENV=development vue-cli-service serve",
