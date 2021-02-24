@@ -1,5 +1,6 @@
-// This plugin will open a modal to prompt the user to enter a number, and
-// it will then create that many rectangles on the screen.
+// This plugin enables users to search for artists and tracks
+// and insert images for design using the Spotify API. 
+// Credit to Spotify for the API.
 // This file holds the main code for the plugins. It has access to the *document*.
 // You can access browser APIs in the <script> tag inside "ui.html" which has a
 // full browser environment (see documentation).
