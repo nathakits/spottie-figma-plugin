@@ -69,7 +69,7 @@ export default {
           url: 'https://nathakits.com'
         },
         {
-          name: 'Support: natdev@gmail.com',
+          name: 'Support: nathakit.tan@gmail.com',
           url: 'mailto:nathakit.tan@gmail.com'
         }
       ],
