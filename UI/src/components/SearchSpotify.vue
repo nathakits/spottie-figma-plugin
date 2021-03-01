@@ -27,7 +27,7 @@
     </div>
     <!-- type -->
     <hr class="divide-solid my-2">
-    <div class="flex justify-between px-4">
+    <div class="flex justify-between items-center px-4">
       <div class="flex space-x-1">
         <div class="flex-initial">
           <button
@@ -58,21 +58,32 @@
         </div>
       </div>
       <template v-if="activeSearchView === 'tracks'">
-        <div
-          v-if="playing === false"
-          class="text-xs px-2 py-1 focus:outline-none rounded h-8 cursor-default text-gray-500 flex items-center"
-        >
-          Double click thumbnail to preview track
-        </div>
         <button
-          v-else
+          v-if="playing"
           @click="stopTrack()"
           class="text-xs px-2 py-1 focus:outline-none rounded h-8 cursor-default border-gray-900 text-gray-900 border"
         >
           Stop playing
         </button>
+        <audio id="audioPlayer" src=""></audio>
       </template>
-      <audio id="audioPlayer" src=""></audio>
+      <template>
+        <Icons
+          id="infoIcon"
+          class="relative"
+          name="info"
+          @mouseover.native="tooltip = true"
+          @mouseleave.native="tooltip = false"
+        >
+          <div
+            v-show="tooltip"
+            class="absolute bg-gray-900 text-white flex justify-center p-2 right-7 rounded z-50 flex-col shadow"
+          >
+            <p class="text-xs w-max">Long press to multi-select images.</p>
+            <p v-if="activeSearchView === 'tracks'" class="text-xs pt-1 w-max">Double click on a thumbnail to preview track.</p>
+          </div>
+        </Icons>
+      </template>
     </div>
     <hr class="divide-solid my-2">
     <!-- search results -->
@@ -138,7 +149,7 @@
             </template>
             <template v-if="activeSearchView === 'tracks'">
               <h1 class="text-lg pb-2 font-semibold">Search Tracks</h1>
-              <p class="text-xs pb-1">Get Spotify Catalog information about tracks that match a keyword string and play previews.</p>
+              <p class="text-xs pb-1">Get Spotify Catalog information about tracks that match a keyword string and play track previews.</p>
             </template>
           </div>
         </div>
@@ -266,10 +277,18 @@ export default {
       playing: false,
       clickCounter: 0,
       timer: null,
+      tooltip: false
     };
   },
   mounted() {
     this.getNewReleases()
+  },
+  watch: {
+    activeSearchView() {
+      // when tab changes
+      // reset and exit selection mode
+      this.resetLongpress()
+    }
   },
   methods: {
     getNewReleases() {
@@ -296,7 +315,6 @@ export default {
         .then( response => {
           let res = response.data
           this.newReleasesArr = res.albums.items
-          console.log(this.newReleasesArr);
         })
       }).catch( error => {
         console.log(error)
