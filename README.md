@@ -13,6 +13,7 @@
 </p>
 <br>
 
+<!-- ## Download -->
 <!-- Install on Figma -->
 
 ## Usage
