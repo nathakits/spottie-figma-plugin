@@ -2,7 +2,7 @@
 	<a href="https://github.com/nathakits/spottie-figma-plugin">
 		<img src="assets/plugin-file-cover.png" alt="Spottie"/>
 	</a>
-</div>
+</h1>
 
 <p style="color:var(--color-text-tertiary);" align="center">
   Spottie is a Figma plugin for inserting album and track covers directly into your designs using Spotify API
