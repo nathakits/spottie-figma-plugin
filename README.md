@@ -4,13 +4,14 @@
 	</a>
 </h1>
 
-<p style="color:var(--color-text-tertiary);" align="center">
-  Spottie is a Figma plugin for inserting album and track covers directly into your designs using Spotify API
-</p>
-
 <h4 align="center">
-  Figma plugin built with Vue.js and Tailwind
+  Spottie is a Figma plugin for inserting album and track covers directly into your designs using Spotify API
 </h4>
+
+<p align="center">
+  Figma plugin built with Vue.js and Tailwind
+</p>
+<br>
 
 <!-- Install on Figma -->
 
