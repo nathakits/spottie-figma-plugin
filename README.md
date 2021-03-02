@@ -1,62 +1,66 @@
-# Figma plugin using Vue
+<h1 align="center">
+	<a href="https://github.com/nathakits/spottie-figma-plugin">
+		<img src="assets/plugin-file-cover.png" alt="Spottie"/>
+	</a>
+</div>
 
-## Project Setup
+<p style="color:var(--color-text-tertiary);" align="center">
+  Spottie is a Figma plugin for inserting album and track covers directly into your designs using Spotify API
+</p>
 
-* Join [Figma Community Beta](https://forms.gle/5zC8iaAHrH2Erf5q9) program
-* Open profile on Figma Desktop and select Plugins tab
-* Create new Plugin and choose **Name** then choose **With UI & browser APIs**
-* For more information follow [Figma Plugin Guide](#figma-plugin)
-* Copy the **name** and **id** from your original Figma 
-* Plugin's `menifest.json` file that you just created using earlier steps and paste that values in this project
-* Remove the plugin you created from Figma Desktop
-* Create new plugin but this time use **Link existing plugin** option and select `menifest.json` file from this project
-* `ui` in the `manifest.json` is configured to `'UI/dist/index.html'` which holds the output of Vue SPA and directly used by the Figma Plugin.
-* That was the final step now you can follow [Run Figma Plugin](#run-Figma-plugin)
+<h4 align="center">
+  Figma plugin built with Vue.js and Tailwind
+</h4>
+
+<!-- Install on Figma -->
+
+## Usage
+In Figma select main menu -> Plugins -> Spottie
+
+- Browse or search for artists and tracks covers
+- Click on the image to insert
+- Long press on an image to multi-select images
+- If an object is selected on the canvas, the insert will replace the object's fill
+- Bonus! In the Tracks tab, double-click on any thumbnail to listen to the preview!
+
+## Coming soon
+- Search Podcast covers
+
+## Installation and build setup
+The project is separated into 2 sections. The main Figma code and the UI which is based on Vue and Tailwind.
+
+#### For main Figma code
+```bash
+# install dependencies
+$ npm install
+
+# serve in watch mode
+$ npm run watch
+
+# build for production
+$ npm run build
+```
+
+#### For UI
+```bash
+# install dependencies
+$ npm install
+
+# serve with hot reload at localhost:8080
+$ npm run serve
+
+# build for production
+$ npm run build
+```
 
 ## [UI Setup](UI/README.md)
-
 Check out [instruction to setup Figma Plugin UI](UI/README.md)
 
-## Figma Plugin
+## Figma setup guide
+You can find instructions at: https://www.figma.com/plugin-docs/setup/
 
-Below are the steps to get your plugin running. You can also find instructions at:
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-  https://www.figma.com/plugin-docs/setup/
-
-This plugin template uses Typescript and NPM, two standard tools in creating JavaScript applications.
-
-First, download Node.js which comes with NPM. This will allow you to install TypeScript and other
-libraries. You can find the download link here:
-
-  https://nodejs.org/en/download/
-
-Next, install TypeScript using the command:
-```
-  npm install -g typescript
-```
-Finally, in the directory of your plugin, get the latest type definitions for the plugin API by running:
-```
-  npm install --saveDev @figma/plugin-typings
-```
-If you are familiar with JavaScript, TypeScript will look very familiar. Valid JavaScript code
-is already a valid Typescript code.
-
-TypeScript adds type annotations to variables. This allows code editors such as Visual Studio Code
-to provide information about the Figma API while you are writing code, as well as help catch bugs
-you previously didn't notice.
-
-For more information, visit https://www.typescriptlang.org/
-
-Using TypeScript requires a compiler to convert TypeScript (code.ts) into JavaScript (code.js)
-for the browser to run.
-
-### Run Figma Plugin
-
-We recommend writing TypeScript code using Visual Studio Code:
-
-1. Download Visual Studio Code if you haven't already: https://code.visualstudio.com/.
-2. Open this directory in Visual Studio Code.
-3. Compile TypeScript to JavaScript: Run the "Terminal > Run Build Task..." menu item,
-    then select "tsc: watch - tsconfig.json". You will have to do this again every time you reopen Visual Studio Code.
-
-That's it! Visual Studio Code will regenerate the JavaScript file every time you save.
+## License
+MIT [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
