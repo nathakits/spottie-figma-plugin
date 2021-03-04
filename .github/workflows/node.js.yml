@@ -40,12 +40,7 @@ jobs:
       working-directory: UI
     - run: npm run build
       working-directory: UI
-
-    
-    # Test
-    - name: Test Spotify API
-      run: npm run test
+    - run: npm run test
       working-directory: UI
-    
     
     
