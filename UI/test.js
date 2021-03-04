@@ -16,7 +16,8 @@ axios({
     'Content-Type': 'application/x-www-form-urlencoded'
   },
 }).then(response => {
-  console.log(`Success`)
+  console.log(`PASS`)
+  console.log(`Valid Key`)
 }).catch(error => {
   process.exit(1)
 })
