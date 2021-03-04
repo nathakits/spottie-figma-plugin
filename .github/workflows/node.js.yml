@@ -36,8 +36,9 @@ jobs:
         node-version: ${{ matrix.node-version }}
         super_secret: ${{ secrets.VUE_APP_SPOTIFY_AUTH_BASIC }}
     - run: npm ci
+      working-directory: UI
     - run: npm run build
-    - working-directory: UI
+      working-directory: UI
     
     
     
