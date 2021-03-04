@@ -34,8 +34,8 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-      env: 
-       VUE_APP_SPOTIFY_AUTH_BASIC: ${{ secrets.VUE_APP_SPOTIFY_AUTH_BASIC }}
+#       env: 
+#        VUE_APP_SPOTIFY_AUTH_BASIC: ${{ secrets.VUE_APP_SPOTIFY_AUTH_BASIC }}
     - run: npm ci
       working-directory: UI
     - run: npm run build
