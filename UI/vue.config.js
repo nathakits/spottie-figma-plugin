@@ -1,5 +1,4 @@
-// const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
-const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin');
+const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 // vue-cli-service build --watch is only inlines js for the firstime so using custom args to change the webpack configuration
@@ -19,7 +18,7 @@ module.exports = {
         template: 'public/index.html', // this is important - a template file to use for insertion
         inlineSource: '.(js|css)$' // embed all javascript and css inline
       }),
-      new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime/]), // this is important - inline the generated js to the index.html
+      new HtmlWebpackInlineSourcePlugin(HtmlWebpackPlugin), // this is important - inline the generated js to the index.html
     ]
   }
 };
