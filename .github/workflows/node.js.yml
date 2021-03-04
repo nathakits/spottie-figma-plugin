@@ -34,7 +34,8 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-        super_secret: ${{ secrets.VUE_APP_SPOTIFY_AUTH_BASIC }}
+    - with:
+        vue-app-spotify-auth-basic: ${{ secrets.VUE_APP_SPOTIFY_AUTH_BASIC }}
     - run: npm ci
       working-directory: UI
     - run: npm run build
