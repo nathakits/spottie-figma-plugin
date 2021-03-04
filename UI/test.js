@@ -5,7 +5,7 @@ var data = qs.stringify({
   'grant_type': 'client_credentials'
 });
 
-const auth = process.env.VUE_APP_SPOTIFY_AUTH_BASICs
+const auth = process.env.VUE_APP_SPOTIFY_AUTH_BASIC
 
 axios({
   method: 'post',
