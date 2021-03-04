@@ -11,6 +11,12 @@
 <p align="center">
   Figma plugin built with Vue.js and Tailwind
 </p>
+
+<div align="center">
+  <a href="https://github.com/nathakits/spottie-figma-plugin/actions/workflows/node.js.yml">
+    <img src="https://github.com/nathakits/spottie-figma-plugin/actions/workflows/node.js.yml/badge.svg?branch=master" alt="Node.js CI">
+  </a>
+</div>
 <br>
 
 <!-- ## Download -->
