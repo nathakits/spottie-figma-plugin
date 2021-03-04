@@ -29,17 +29,17 @@ jobs:
     - run: npm ci
     - run: npm run build
 
-    # UI
-    - name: Building UI - Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-      env: 
-       VUE_APP_SPOTIFY_AUTH_BASIC: ${{ secrets.VUE_APP_SPOTIFY_AUTH_BASIC }}
-    - run: npm ci
-      working-directory: UI
-    - run: npm run build
-      working-directory: UI
+#     # UI
+#     - name: Building UI - Node.js ${{ matrix.node-version }}
+#       uses: actions/setup-node@v1
+#       with:
+#         node-version: ${{ matrix.node-version }}
+#       env: 
+#        VUE_APP_SPOTIFY_AUTH_BASIC: ${{ secrets.VUE_APP_SPOTIFY_AUTH_BASIC }}
+#     - run: npm ci
+#       working-directory: UI
+#     - run: npm run build
+#       working-directory: UI
     
     
     
