@@ -22,7 +22,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     # Main Figma code
-    - name: Figma Code - Node.js ${{ matrix.node-version }}
+    - name: Buling Figma Code - Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
@@ -37,7 +37,7 @@ jobs:
         super_secret: ${{ secrets.VUE_APP_SPOTIFY_AUTH_BASIC }}
     - run: npm ci
     - run: npm run build
-    - working-directory: UI
+      working-directory: UI
     
     
     
