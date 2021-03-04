@@ -8,7 +8,8 @@
   "scripts": {
     "serve": "NODE_ENV=development vue-cli-service serve",
     "build": "vue-cli-service build",
-    "build-watch": "vue-cli-service build --watch-inline"
+    "build-watch": "vue-cli-service build --watch-inline",
+    "test": "node test.js"
   },
   "dependencies": {
     "axios": "^0.21.1",
@@ -46,6 +47,7 @@
     "autoprefixer": "^9.8.6",
     "babel-eslint": "^10.1.0",
     "css-loader": "^3.6.0",
+    "dotenv": "^8.2.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
     "html-webpack-inline-source-plugin": "^1.0.0-beta.2",
