@@ -282,6 +282,10 @@ export default {
   },
   mounted() {
     this.getNewReleases()
+    window.addEventListener('keyup', this.enterSearch)
+  },
+  beforeDestroy() {
+    window.removeEventListener('keyup', this.enterSearch)
   },
   watch: {
     activeSearchView() {
@@ -291,6 +295,12 @@ export default {
     }
   },
   methods: {
+    enterSearch(e) {
+      if (e.code === 'Enter') {
+        console.log(e.code)
+        this.querySpotify()
+      }
+    },
     getNewReleases() {
       this.arraySel = []
       var auth = process.env.VUE_APP_SPOTIFY_AUTH_BASIC
