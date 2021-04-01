@@ -39,7 +39,7 @@ The project is separated into 2 sections. The main Figma code and the UI which i
 
 ### Spotify
 This project uses Spotify API so you need to get a Spotify developer account.
-Create a new Spotify app and `Client ID` and `Secret Key` to generate the access token.
+Create a new Spotify app and get the `Client ID` and `Secret Key` to generate the access token.
 
 #### For main Figma code
 ```bash
