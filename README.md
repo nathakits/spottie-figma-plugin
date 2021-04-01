@@ -37,6 +37,10 @@ In Figma select main menu -> Plugins -> Spottie
 ## Installation and build setup
 The project is separated into 2 sections. The main Figma code and the UI which is based on Vue and Tailwind.
 
+### Spotify
+This project uses Spotify API so you need to get a Spotify developer account.
+Create a new Spotify app and `Client ID` and `Secret Key` to generate the access token.
+
 #### For main Figma code
 ```bash
 # install dependencies
