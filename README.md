@@ -13,6 +13,9 @@
 </p>
 
 <div align="center">
+  <a href="https://www.producthunt.com/posts/spottie?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-spottie" target="_blank">
+    <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=290475&theme=light" alt="Spottie - Insert album and track covers from Spotify to Figma | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" />
+  </a>
   <a href="https://github.com/nathakits/spottie-figma-plugin/actions/workflows/node.js.yml">
     <img src="https://github.com/nathakits/spottie-figma-plugin/actions/workflows/node.js.yml/badge.svg?branch=master" alt="Node.js CI">
   </a>
