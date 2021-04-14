@@ -22,8 +22,10 @@
 </div>
 <br>
 
-<!-- ## Download -->
-<!-- Install on Figma -->
+## Download
+Install in Figma
+
+https://www.figma.com/community/plugin/946462676168136646/Spottie
 
 ## Usage
 In Figma select main menu -> Plugins -> Spottie
