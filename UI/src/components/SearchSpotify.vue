@@ -187,10 +187,6 @@ export default {
       limit: 50,
       offset: 0,
       total: 0,
-      size: {
-        width: 800,
-        height: 800
-      },
       tooltip: false
     };
   },
@@ -211,7 +207,8 @@ export default {
   computed: mapState({
     arraySel: 'arraySel',
     longpress: 'longpress',
-    playing: 'playing'
+    playing: 'playing',
+    size: 'size'
   }),
   methods: {
     enterSearch(e) {

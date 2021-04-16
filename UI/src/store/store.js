@@ -10,6 +10,10 @@ export const store = new Vuex.Store({
     playing: false,
     longpress: false,
     arraySel: [],
+    size: {
+      width: 800,
+      height: 800
+    },
   },
 
   mutations: {
@@ -24,6 +28,12 @@ export const store = new Vuex.Store({
     },
     arraySel: (state, value) => {
       state.arraySel = value
+    },
+    size: (state, value) => {
+      state.size = {
+        width: value.width,
+        height: value.height
+      }
     }
   },
 
@@ -41,6 +51,9 @@ export const store = new Vuex.Store({
     },
     arraySel: state => {
       return state.arraySel
+    },
+    size: state => {
+      return state.size
     }
   },
 

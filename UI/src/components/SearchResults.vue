@@ -117,7 +117,8 @@ export default {
   computed: mapState({
     arraySel: 'arraySel',
     longpress: 'longpress',
-    playing: 'playing'
+    playing: 'playing',
+    size: 'size'
   }),
   methods: {
     handleClick(imageURL, trackURL) {
