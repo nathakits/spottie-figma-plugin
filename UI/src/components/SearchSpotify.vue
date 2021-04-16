@@ -41,6 +41,15 @@
         <div class="flex-initial">
           <button
             class="text-xs px-2 py-1 focus:outline-none rounded h-8 font-semibold cursor-default"
+            :class="activeSearchView === 'albums' ? 'text-gray-900': 'text-gray-400 hover:text-gray-700'"
+            @click="activeSearchView = 'albums', activeSearchArr = albums"
+          >
+            Albums
+          </button>
+        </div>
+        <div class="flex-initial">
+          <button
+            class="text-xs px-2 py-1 focus:outline-none rounded h-8 font-semibold cursor-default"
             :class="activeSearchView === 'artists' ? 'text-gray-900': 'text-gray-400 hover:text-gray-700'"
             @click="activeSearchView = 'artists', activeSearchArr = artists"
           >
@@ -180,9 +189,10 @@ export default {
       activeSearchView: 'new-releases',
       activeSearchArr: [],
       newReleasesArr: [],
+      albums: [],
       artists: [],
       tracks: [],
-      searchType: 'artist,track',
+      searchType: 'album,artist,track',
       searchQuery: '',
       limit: 50,
       offset: 0,
@@ -271,6 +281,7 @@ export default {
           })
           .then( response => {
             let res = response.data
+            this.albums = res.albums.items
             this.artists = res.artists.items
             this.tracks = res.tracks.items
             this.total = res.artists.total
@@ -279,6 +290,8 @@ export default {
                this.activeSearchArr = this.artists
             } else if (this.activeSearchView === 'tracks') {
               this.activeSearchArr = this.tracks
+            } else if (this.activeSearchView === 'albums') {
+              this.activeSearchArr = this.albums
             }
           })
         }).catch( error => {
@@ -310,14 +323,17 @@ export default {
           })
           .then( response => {
             let res = response.data
+            this.albums = this.albums.concat(res.albums.items)
             this.artists = this.artists.concat(res.artists.items)
             this.tracks = this.tracks.concat(res.tracks.items)
             this.total = res.artists.total
 
             if (this.activeSearchView === 'artists') {
               this.activeSearchArr = this.artists
-            } else {
+            } else if (this.activeSearchView === 'tracks') {
               this.activeSearchArr = this.tracks
+            } else if (this.activeSearchView === 'albums') {
+              this.activeSearchArr = this.albums
             }
           })
         }).catch( error => {
@@ -327,6 +343,7 @@ export default {
       }
     },
     clearSearch() {
+      this.albums = []
       this.artists = []
       this.tracks = []
       this.activeSearchArr = []

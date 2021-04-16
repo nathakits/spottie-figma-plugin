@@ -7,6 +7,24 @@
     >
       <template v-for="(item ,i) in active_search_array">
         <div v-if="item !== null" :key="i" :id="item.name ? item.name : ''">
+          <!-- albums -->
+          <div
+            v-if="active_search_view === 'albums'"
+            class="box rounded h-32 w-full relative"
+            :class="item.images.length > 0 ? 'hover:opacity-50 cursor-pointer' : 'bg-green-700'"
+          >
+            <img
+              v-if="item.images.length > 0"
+              :id="item.id"
+              :src="item.images[1].url"
+              :alt="item.name"
+              loading=lazy
+              class="object-cover w-full h-full rounded"
+              @click="addToCanvas(item.images[0].url), addToSelection(item.name, item.images[0].url, item.id)"
+              v-longclick="() => setLongpress()"
+            >
+            <Icons v-else name="albums"/>
+          </div>
           <!-- artists -->
           <div
             v-if="active_search_view === 'artists'"
@@ -55,6 +73,10 @@
         class="text-center"
         style="max-width:240px"
       >
+        <template v-if="active_search_view === 'albums'">
+          <h1 class="text-lg pb-2 font-semibold">Search Albums</h1>
+          <p class="text-xs">Get Spotify Catalog information about albums that match a keyword string.</p>
+        </template>
         <template v-if="active_search_view === 'artists'">
           <h1 class="text-lg pb-2 font-semibold">Search Artists</h1>
           <p class="text-xs">Get Spotify Catalog information about artists that match a keyword string.</p>
