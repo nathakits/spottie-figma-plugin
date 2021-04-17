@@ -42,7 +42,7 @@
           <button
             class="text-xs px-2 py-1 focus:outline-none rounded h-8 font-semibold cursor-default"
             :class="activeSearchView === 'albums' ? 'text-gray-900': 'text-gray-400 hover:text-gray-700'"
-            @click="activeSearchView = 'albums', activeSearchArr = albums, total = responseData.albums.total"
+            @click="activeSearchView = 'albums', activeSearchArr = albums, setTotal(`albums`)"
           >
             Albums
           </button>
@@ -51,7 +51,7 @@
           <button
             class="text-xs px-2 py-1 focus:outline-none rounded h-8 font-semibold cursor-default"
             :class="activeSearchView === 'artists' ? 'text-gray-900': 'text-gray-400 hover:text-gray-700'"
-            @click="activeSearchView = 'artists', activeSearchArr = artists, total = responseData.artists.total"
+            @click="activeSearchView = 'artists', activeSearchArr = artists, setTotal(`artists`)"
           >
             Artists
           </button>
@@ -60,7 +60,7 @@
           <button 
             class="text-xs px-2 py-1 focus:outline-none rounded h-8 font-semibold cursor-default"
             :class="activeSearchView === 'tracks' ? 'text-gray-900': 'text-gray-400 hover:text-gray-700'"
-            @click="activeSearchView = 'tracks', activeSearchArr = tracks, total = responseData.tracks.total"
+            @click="activeSearchView = 'tracks', activeSearchArr = tracks, setTotal(`tracks`)"
           >
             Tracks
           </button>
@@ -233,7 +233,6 @@ export default {
   methods: {
     enterSearch(e) {
       if (e.code === 'Enter') {
-        console.log(e.code)
         this.querySpotify()
       }
     },
@@ -348,6 +347,11 @@ export default {
       } else if (this.activeSearchView === 'albums') {
         this.activeSearchArr = this.albums
         this.total = this.responseData.albums.total
+      }
+    },
+    setTotal(type) {
+      if (this.activeSearchArr.length > 0) {
+        this.total = this.responseData[type].total
       }
     },
     clearSearch() {
