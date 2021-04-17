@@ -1,6 +1,6 @@
 <h1 align="center">
 	<a href="https://github.com/nathakits/spottie-figma-plugin">
-		<img src="assets/plugin-file-cover.png" alt="Spottie"/>
+		<img src="assets/plugin-file-cover.jpg" alt="Spottie"/>
 	</a>
 </h1>
 
