@@ -5,7 +5,7 @@
 </h1>
 
 <h4 align="center">
-  Spottie is a Figma plugin for inserting album and track covers directly into your designs using Spotify API
+  Spottie is a Figma plugin for inserting album, artist and track covers directly into your designs using Spotify API
 </h4>
 
 <p align="center">
@@ -30,7 +30,7 @@ https://www.figma.com/community/plugin/946462676168136646/Spottie
 ## Usage
 In Figma select main menu -> Plugins -> Spottie
 
-- Browse or search for artists and tracks covers
+- Browse or search for album, artist and track covers
 - Click on the image to insert
 - Long press on an image to multi-select images
 - If an object is selected on the canvas, the insert will replace the object's fill
@@ -38,6 +38,7 @@ In Figma select main menu -> Plugins -> Spottie
 
 ## Coming soon
 - Search Podcast covers
+- Random insert
 
 ## Installation and build setup
 The project is separated into 2 sections. The main Figma code and the UI which is based on Vue and Tailwind.
