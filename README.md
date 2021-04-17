@@ -27,18 +27,24 @@ Install in Figma
 
 https://www.figma.com/community/plugin/946462676168136646/Spottie
 
-## Usage
+## Basic Usage
 In Figma select main menu -> Plugins -> Spottie
 
 - Browse or search for album, artist and track covers
 - Click on the image to insert
-- Long press on an image to multi-select images
-- If an object is selected on the canvas, the insert will replace the object's fill
-- Bonus! In the Tracks tab, double-click on any thumbnail to listen to the preview!
+
+## Features
+- New releases on plugin start up
+- Search album, artist and track covers
+- Insert single image with single click
+- Long press on an image to enable multi-select mode
+- Selected object(s) in the canvas will get replaced with the inserted image(s)
+- Browser-level image lazy-loading
+- Bonus! In the Tracks tab, double-click on any thumbnail to listen to the preview track!
 
 ## Coming soon
 - Search Podcast covers
-- Random insert
+- Random image insert
 
 ## Installation and build setup
 The project is separated into 2 sections. The main Figma code and the UI which is based on Vue and Tailwind.
