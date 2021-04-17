@@ -42,7 +42,7 @@
           <button
             class="text-xs px-2 py-1 focus:outline-none rounded h-8 font-semibold cursor-default"
             :class="activeSearchView === 'albums' ? 'text-gray-900': 'text-gray-400 hover:text-gray-700'"
-            @click="activeSearchView = 'albums', activeSearchArr = albums"
+            @click="activeSearchView = 'albums', activeSearchArr = albums, total = responseData.albums.total"
           >
             Albums
           </button>
@@ -51,7 +51,7 @@
           <button
             class="text-xs px-2 py-1 focus:outline-none rounded h-8 font-semibold cursor-default"
             :class="activeSearchView === 'artists' ? 'text-gray-900': 'text-gray-400 hover:text-gray-700'"
-            @click="activeSearchView = 'artists', activeSearchArr = artists"
+            @click="activeSearchView = 'artists', activeSearchArr = artists, total = responseData.artists.total"
           >
             Artists
           </button>
@@ -60,7 +60,7 @@
           <button 
             class="text-xs px-2 py-1 focus:outline-none rounded h-8 font-semibold cursor-default"
             :class="activeSearchView === 'tracks' ? 'text-gray-900': 'text-gray-400 hover:text-gray-700'"
-            @click="activeSearchView = 'tracks', activeSearchArr = tracks"
+            @click="activeSearchView = 'tracks', activeSearchArr = tracks, total = responseData.tracks.total"
           >
             Tracks
           </button>
@@ -108,10 +108,9 @@
         <template v-if="activeSearchView !== 'new-releases'">
           <template v-if="longpress === false">
             <button
-              v-if="activeSearchArr.length !== total"
               class="text-xs text-gray-900 border border-gray-900 py-1 px-4 rounded disabled:opacity-50 flex-initial h-8 cursor-default"
               @click="paginateSearch()"
-              :disabled="activeSearchArr.length === 0"
+              :disabled="activeSearchArr.length === total"
             >
               Load More
             </button>
@@ -194,8 +193,19 @@ export default {
       tracks: [],
       searchType: 'album,artist,track',
       searchQuery: '',
-      limit: 50,
       offset: 0,
+      limit: 50,
+      responseData: {
+        albums: {
+          total: 0
+        },
+        artists: {
+          total: 0
+        },
+        tracks: {
+          total: 0
+        },
+      },
       total: 0,
       tooltip: false
     };
@@ -281,18 +291,11 @@ export default {
           })
           .then( response => {
             let res = response.data
+            this.responseData = res
             this.albums = res.albums.items
             this.artists = res.artists.items
             this.tracks = res.tracks.items
-            this.total = res.artists.total
-
-            if (this.activeSearchView === 'artists') {
-               this.activeSearchArr = this.artists
-            } else if (this.activeSearchView === 'tracks') {
-              this.activeSearchArr = this.tracks
-            } else if (this.activeSearchView === 'albums') {
-              this.activeSearchArr = this.albums
-            }
+            this.setData()
           })
         }).catch( error => {
           console.log(error)
@@ -315,7 +318,7 @@ export default {
         .then( response => {
           axios({
             method: 'get',
-            url: `https://api.spotify.com/v1/search?q=${this.searchQuery.replace(' ', '+')}&type=${this.searchType}&offset=${this.offset += 18}&limit=${this.limit}`,
+            url: `https://api.spotify.com/v1/search?q=${this.searchQuery.replace(' ', '+')}&type=${this.searchType}&offset=${this.offset += 50}&limit=${this.limit}`,
             headers: {
               'Authorization': `Bearer ${response.data.access_token}`,
               'Content-Type': 'application/x-www-form-urlencoded'
@@ -323,23 +326,28 @@ export default {
           })
           .then( response => {
             let res = response.data
+            this.responseData = res
             this.albums = this.albums.concat(res.albums.items)
             this.artists = this.artists.concat(res.artists.items)
             this.tracks = this.tracks.concat(res.tracks.items)
-            this.total = res.artists.total
-
-            if (this.activeSearchView === 'artists') {
-              this.activeSearchArr = this.artists
-            } else if (this.activeSearchView === 'tracks') {
-              this.activeSearchArr = this.tracks
-            } else if (this.activeSearchView === 'albums') {
-              this.activeSearchArr = this.albums
-            }
+            this.setData()
           })
         }).catch( error => {
           console.log(error)
           notify(error)
         });
+      }
+    },
+    setData() {
+      if (this.activeSearchView === 'artists') {
+          this.activeSearchArr = this.artists
+          this.total = this.responseData.artists.total
+      } else if (this.activeSearchView === 'tracks') {
+        this.activeSearchArr = this.tracks
+        this.total = this.responseData.tracks.total
+      } else if (this.activeSearchView === 'albums') {
+        this.activeSearchArr = this.albums
+        this.total = this.responseData.albums.total
       }
     },
     clearSearch() {
