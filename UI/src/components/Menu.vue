@@ -7,7 +7,7 @@
     >
       <Icons name="menu"/>
     </button>
-    <div v-show="menu" class="absolute left-0 mt-2 w-64 rounded-md shadow-lg bg-gray-900 shadow-md z-50">
+    <div v-show="menu" class="absolute left-0 mt-2 w-64 rounded-md shadow-lg bg-gray-900 z-50">
       <div id="menuList" class="py-2" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
         <template v-for="(item, i) in menuItems">
           <hr v-if="item.name ==='divider'" :key="i" class="my-2 opacity-30">
